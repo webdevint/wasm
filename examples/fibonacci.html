@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<title>Fibonacci</title>
+      <!-- load our javascript -->
+      <script src="fibonacci.js"> </script>   
+      <script>
+         /*
+            we add another inline script file here to wrap our fib function
+            into a method that we can easily call from our script.
+            First we must wait for the runtime to be completely ready.
+            For that we use the module, Module.onRuntimeInitialized
+         */
+          
+         Module.onRuntimeInitialized = () => 
+         {
+               init();        
+         };
+
+         function init()
+         {
+         /*
+          var js_wrapped_fib = Module.cwrap("fib", "number", ["number"]);
+            // use the variable to call the function
+            console.log("The result of fib(5) is:", js_wrapped_fib(5));
+         */
+            
+           var result = Module.ccall('fib', // name of C function
+           'number', // return type
+           ['number'], // argument types
+           [5]); // arguments
+           console.log("The result of fib(5) is:", result);
+           
+         }        
+      </script
+   </head>
+	<body>
+		<p>Open the console to see the result! (f12)</p>
+	</body>
+</html>

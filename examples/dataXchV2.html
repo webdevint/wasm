@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<title>dataXchV2</title>
+      
+     
+       <script>
+         /*
+            re-uses dataXchV1.c
+            compile with 
+               emcc dataXchV1.c -o dataXchV2.wasm
+            We cannot access a C array directly, We must do so through pointers to getter/setter functions coded within the programme. 
+         */
+         
+            ptrBuffer = null;
+            intBfrLen = null;
+            mainFunc = null;
+            resultGetChar = null;
+            resultSetChar = null;
+            const bufferSize = 1024;
+
+         /*
+            Because we include the Emscripten header in c and compile without optimisation,at this time, see above,  
+               the Emscripten compiler includes code that requires us to handle wasi_snapshot_preview1, i.e., 
+               the auto exported functions we don't use at the moment, otherwise, we get the following error,
+                  Uncaught (in promise) TypeError: import object field 'wasi_snapshot_preview1' is not an Object,
+            This error happens because your WebAssembly (.wasm) binary was compiled with 
+               WASI (WebAssembly System Interface) enabled, but, 
+               your browser's native JavaScript environment doesn't provide WASI APIs by default.
+            When the WebAssembly runtime tries to initialize your file, 
+               it sees a request for system calls (like printing to a console or reading files) 
+               mapped under the object "wasi_snapshot_preview1", 
+               but it finds nothing or an undefined reference in your JavaScript importObject; therefore, 
+               we create dummy functions for our imported objects, as we don't make use of them at this time.
+         */
+
+           // definition for extraeneous exported objects
+           const wasiMock = 
+           {
+              fd_write: (fd, iovs, iovs_len, nwritten) => 0,
+              fd_close: (fd) => 0,
+              fd_seek: (fd, offset_base, offset_high, whence, newoffset) => 0,
+              fd_read: (fd, iovs, iovs_len, nread) => 0,
+              environ_sizes_get: (environ_count, environ_buf_size) => 0,
+              environ_get: (environ, environ_buf) => 0,
+              proc_exit: (rval) => {},
+              main: () => main() // may be required here if you specify a main in your c code
+         };
+         const importObject = 
+         {
+           wasi_snapshot_preview1: wasiMock
+         };
+         // end of definition for extraeneous exported objects
+
+            WebAssembly.instantiateStreaming(fetch("dataXchV2.wasm"), importObject).then(
+            (obj) => 
+               {
+                  // establish a link and execute the get_buffer function defined in c and compiled into z.wasm
+                  ptrBuffer = obj.instance.exports.get_buffer_ptr();    // buffer will be used between JS and C as the our data store
+                  // get a pointer to the buffer
+                  console.log("get_buffer_ptr = " + ptrBuffer);   // must use pointers to access non-global storage areas
+                  // establish a link and execute the function that will provide us with c's buffer length
+                  intBfrLen = obj.instance.exports.get_buffer_len();
+                  console.log("get_buffer_len = " + intBfrLen);
+                  // we now have a shared storage area fo two way communication.
+                  
+                  // have c store some data for retrieval by js
+                  // establish a link and execute the main function in c
+                  /* 
+                     main is automatically executed, as normal
+                     mainFunc = obj.instance.exports.main();
+                     console.log("main was recognised");
+                     mainFunc;      // execute c's main function
+                  */
+                  
+                  // Have js retrieve the newly stored data
+                  // Establish a link and execute the function that will fetch a character from c's buffer
+                  // Note: c's buffer was initialsed to all x's in main(),
+                  //    afterwhich the second character was changed to an 'a', ascii code 97.
+                  resultGetChar = obj.instance.exports.getCharFromBuffer(1);  // get the second character in the buffer
+                  console.log("second value in c's buffer is: " + resultGetChar);   
+                  // convert the ascii code to a character
+                  console.log("second character in c's buffer is: " +  String.fromCharCode(resultGetChar));
+                  
+                  
+                  // Have js place data in the common storage buffer
+                  // Passing characters to c must be in UInt8Array form.
+                  uInt8CharacterString = new TextEncoder().encode("h");
+                  // establish a link and execute the function that write a character into c's buffer at position buffer +2
+                  charSetBuffer = obj.instance.exports.setCharIntoBuffer(2, uInt8CharacterString[0]);
+                  console.log("character set:" + charSetBuffer );
+                  // to confirm the write, let's fetch it back
+                  resultGetChar = obj.instance.exports.getCharFromBuffer(2);
+                  console.log("third character in c's buffer is: " +  String.fromCharCode(resultGetChar));
+                  // this data is now available for c to work with
+                  
+                  
+                  //
+                  // passing strings to wasm memory so that c can work with them.
+                  //
+                  const encoder = new TextEncoder();
+                  const decoder = new TextDecoder();
+                  const u8array = new Uint8Array(bufferSize);
+                  const strMessage = "The Quick Brown Fox";
+                 
+                  // Let us make use of a pre-existing buffer created by default in the wasm module.
+                  // an object called memory is autogenerated by the emcc compiler that has a property
+                  //    that points to a pre-established buffer called linear memory.
+                  //    It is exported as "memory". (see the .wat)
+                  
+                  // establish a link and execute the function that allows us to access this buffer
+                 const wasmMemory = obj.instance.exports.memory; 
+                  // get the address that buffer points to
+                  const memoryBuffer = wasmMemory.buffer; 
+                  // show size of pre-established buffer
+                  console.log("memory buffer byte length: " + memoryBuffer.byteLength);
+                  
+                  
+                  // fetch all the bytes from buffer as UInt8 type bytes using the typed array UInt8Array
+                  const memoryBytes = new Uint8Array(memoryBuffer); // memoryBytes is a UIntArray type
+                 
+                 // we can now access any byte within the buffer: they are initially set to 0.                 
+                  console.log("First byte of WebAssembly memory:", memoryBytes[0]);
+                  
+                  // prepare a string for writing into the buffer
+                  const u8ArrayMsg = new Uint8Array(strMessage.length);
+                  console.log("message length:", strMessage.length);
+                  console.log("uint8array length:", u8ArrayMsg.length);
+                  encoder.encodeInto(strMessage, u8ArrayMsg);  // encode into UInt8Array               
+                 
+                  // write to buffer
+                  // memoryBytes, defined above, is a UInt8Array type and set is a method from it's parent: 
+                  //    TypedArray prototype.
+                 memoryBytes.set(u8ArrayMsg, 3);
+
+                  // confirm the write.                 
+                  console.log("third byte of WebAssembly memory:", memoryBytes[3]);
+                  // translated to ascii
+                  console.log( "First byte of WebAssembly memory as ascii char: " + String.fromCharCode(memoryBytes[3]));
+                  
+                  // fetch a set of bytes from wasm's linear memory
+                  // get a block of bytes from the UInt8Array: e.g. our string
+                  console.log( "fetched string: " + decoder.decode(memoryBytes.subarray(3, strMessage.length + 3)));
+                  
+               }
+            );
+
+      </script>
+	</head>
+	<body>
+		<p>Open the console to see the result! (f12)</p>
+	</body>
+</html>

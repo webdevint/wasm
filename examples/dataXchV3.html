@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+   <head>
+      <title>dataXchV3</title>
+         <script>
+         
+           const wasiMock = 
+           {
+              fd_write: (fd, iovs, iovs_len, nwritten) => 0,
+              fd_close: (fd) => 0,
+              fd_seek: (fd, offset_base, offset_high, whence, newoffset) => 0,
+              fd_read: (fd, iovs, iovs_len, nread) => 0,
+              environ_sizes_get: (environ_count, environ_buf_size) => 0,
+              environ_get: (environ, environ_buf) => 0,
+              proc_exit: (rval) => {},
+              main: () => main() // may be required here if you specify a main in your c code
+         };
+         const importObject = 
+         {
+           wasi_snapshot_preview1: wasiMock
+         };
+
+            WebAssembly.instantiateStreaming(fetch("dataXchV3.wasm"), importObject).then(
+            (wasmObj) => 
+               {
+                  // data stores created in C is stored in linear memory in wasm 
+                  //    and can be accessed in JS by fetching the address, i.e., the offset in linear memory, 
+                  //    of the data variable.
+                  // Linear memory can be through the exported wasm object variable "memory", 
+                  //    and by accessing it's buffer property: memory.buffer.
+                  // While c has immediate access to linear memory by creating a storage, 
+                  //    Javascript has access through an exported property, memory.buffer.
+
+                  // obtain the offset to c's buffer in linear memory.
+                  // This is accomplished by the underlying compiled unit returning a pointer to JS.
+                  var offset = wasmObj.instance.exports.getData();
+                  
+                  // We view the data as Uint32 type data bytes, 4 byte unsigned integer,
+                  //    as we intend to work with that type of data; therefore,
+                  //    we create a view on the storage area, i.e., Linear Memory
+                  // Typed Array args are (Array buffer, offset into the buffer, numbr of elements from the array buffer).
+                  var linearMemory = new Uint32Array(wasmObj.instance.exports.memory.buffer, offset, 10);
+                  // We now have a UInt32Array, linearMemory, that views 40 bytes of Liner Memory as type Uint32,
+                  //    i.e., 4 byte integer data, and we have access to 10 of them.
+                  // At this time we have no idea what data is stored there. We will shortly initialise this area of storage.
+                  // Note: array lengths should be shared in order to avoid out of bounds errors.
+                  
+                  // Now we overwrite the storage area with some data: values 0 through 9,
+                  for (let i=0;i<linearMemory.length;i++) 
+                  {
+                    linearMemory[i] = i;
+                  }
+                  
+                  // At this point, we have data to work with in Linear Memory of the wasm module
+                  // Let's make changes to the storage area of Linear Memory created by JS above, 
+                  //    but using the underlying compiled functions we created in c
+                  // Call the c code "add" function within the wasm module to manipulate the data placed in Linear Memory by javascript
+                  wasmObj.instance.exports.add(10);   
+                  // confirm the changes by displaying them in the console
+                  for (var i = 0; i < linearMemory.length; i++) 
+                  {
+                    console.log(linearMemory[i]);
+                  }
+                  
+               } // end of successful promise argument
+            ); // end of then
+         
+         </script>
+
+   </head>
+   <body>
+		<p>Open the console to see the result! (f12)</p>
+	</body>>
+</html>
