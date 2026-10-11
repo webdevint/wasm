@@ -1,16 +1,17 @@
-<p align="center">Exploring Web Assembly (WASM)</p>
+# <div style="text-align: center">Exploring Web Assembly (WASM)</div>
 
-This project consists of several base examples of working with WASM and the various tools, which may be of interest to the curious developer.<br>
-The project uses the Emscripten toolchain to compile C source code to a wasm file suitable to be used by Javascript in a Web page.<br>
-The examples include:
-    <div style="margin-left: 1em">• The Web Assembly language built into all modern web browsers;<br>
-    • Working with wasm files;,<br>
+   <div style="margin-left: 1em">This project consists of several base examples of working with WASM and the various tools, which may be of interest to the curious developer.</div>
+    <div style="margin-left: 1em">The project uses the Emscripten toolchain to compile C source code to a wasm file suitable to be used by Javascript in a Web page.</div>
+    <div style="margin-left: 1em">The examples include:</div>
+ <div style="margin-left: 2em"> • The Web Assembly language built into all modern web browsers;<br>
+    • Working with wasm files;<br>
     • Using the Emscripten compiler and its various outputs;<br>
     • Compiling C source code to wasm that includes code to:<br>
         <div style="margin-left: 1em">◦ Call Javascript functions from C;<br>
         ◦ Call C functions from Javascript;<br>
-        ◦ How to read/write to Linear memory both in Javascript and in C;</div></div>
-Although there are many other tools and methods used in working with Web Assembly, we restrict ourselves to the above.<br>
+        ◦ How to read/write to Linear memory both in Javascript and in C;
+        </div></div>
+<div style="margin-left: 1em">Although there are many other tools and methods used in working with Web Assembly, we restrict ourselves to the above.<br>
 The following is a list and a short description of the examples in the project:<br>
     <div style="margin-left: 1em">1. hello, the ubiquitous first rendering of a .wasm file, created from a hello.c file and compiled using emcc.<br> 
         <div style="margin-left: 1em">i. Uses the default Javascript and HTML files output by the emcc compiler.<br>
@@ -30,7 +31,7 @@ The following is a list and a short description of the examples in the project:<
         ii. The Javascript ″glue″ file is not required.<br>
         iii. The c file uses an Emscripten macro to retain access to the specified C functions, therefore, the compiler export options are not required,<br>
             <div style="margin-left: 1em"> emcc fibonacciV2.c -o fibonacciV2.wasm<br></div>
-        iv. Requires some boiler plate code in the html page to handle exported objects by the wasm file.</div>
+        iv. Requires some boiler plate code in the html page to handle exported objects by the wasm file.</div><br>
 The next three examples demonstrate the exchange of data between Javascript and C through a shared area of memory established by the compiler in the wasm module,<br>
 known as Linear Memory.<br>5) dataXchV1
 	<div style="margin-left: 1em"><div style="margin-left: 1em">The Javascript code,</div>
