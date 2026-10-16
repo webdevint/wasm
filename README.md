@@ -47,7 +47,7 @@ The following is a list, by topic, and a short description of the examples in th
 
 3. Await the complete initialisation of a wasm file by using the Module object′s ″onRuntimeInitialized″ property, before proceeding with code that depends on it.
 
-4. Providing options to the emcc compiler to recognise exported functions, e.g.,
+4. Providing options to the emcc compiler to recognise exported functions, e.g.,<br>
    emcc fibonacci.c -o fibonacci.js -s WASM=1 -s EXPORTED_FUNCTIONS=_fib -sEXPORTED_RUNTIME_METHODS=ccall,cwrap
 
 5. 
