@@ -52,7 +52,7 @@ The following is a list, by topic, and a short description of the examples in th
 
 **fibonacciV2**
 
-1. Uses a Web Assembly promise type function in co-operation with the Javascript ″fetch″ function to load, compile and instantiate the wasm file,
+1. Uses a Web Assembly promise type function in co-operation with the Javascript ″fetch″ function to load, compile and instantiate the wasm file,<br>
    WebAssembly.instantiateStreaming(fetch("fibonacciV2.wasm"), importObject)
 
 2. The Javascript ″glue″ file is not required;
