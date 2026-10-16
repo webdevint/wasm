@@ -16,11 +16,11 @@ The examples include:
 
 -  Compiling C source code to wasm that includes code to:
 
-  - Call Javascript functions from C;
+    - Call Javascript functions from C;
 
-  - Call C functions from Javascript;
+    - Call C functions from Javascript;
 
-  - How to read/write to Linear memory both in Javascript and in C.
+    - How to read/write to Linear memory both in Javascript and in C.
 
 - Working with wasm text language .wat files.
 
