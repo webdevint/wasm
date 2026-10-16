@@ -35,7 +35,7 @@ The following is a list, by topic, and a short description of the examples in th
 
 **helloV2**: 
 
-1. Similar to hello but uses a custom web page (helloV2_custom.html) rather than the html page emitted by the emcc compiler;
+1. Similar to hello but uses a custom web page (helloV2_custom.html) in addition to the html page emitted by the emcc compiler;
 
 2. Call any Javascript function either from the JS library or a custom function, by including the Emscripten header and using the ″emscripten_run_script″ macro.
 
