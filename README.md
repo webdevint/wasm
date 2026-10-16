@@ -92,7 +92,7 @@ The Javascript code portion,
 
 The C code portion,
 
-1. Includes the Emscipten header in order to use the macro,
+1. Includes the Emscipten header in order to use the macro,<br>
    EXTERN EMSCRIPTEN_KEEPALIVE
 
 2. Creates and exports several functions for Javascript to call:
