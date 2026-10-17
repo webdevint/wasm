@@ -129,7 +129,7 @@ A further demonstration of Javascript interacting with C to manipulate shared da
 
 
 
-<u>The WAT language</u>
+**The WAT language**
 
 
 
