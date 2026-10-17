@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+   <head>
+      <title>Add</title>
+         <script>
+
+       
+           const wasiMock = 
+           {
+              fd_write: (fd, iovs, iovs_len, nwritten) => 0,
+              fd_close: (fd) => 0,
+              fd_seek: (fd, offset_base, offset_high, whence, newoffset) => 0,
+              fd_read: (fd, iovs, iovs_len, nread) => 0,
+              environ_sizes_get: (environ_count, environ_buf_size) => 0,
+              environ_get: (environ, environ_buf) => 0,
+              proc_exit: (rval) => {},
+              main: () => main() // may be required here if you specify a main in your c code
+         };
+         const importObject = 
+         {
+           wasi_snapshot_preview1: wasiMock
+         };
+         // end of definition for exported objects
+
+
+            WebAssembly.instantiateStreaming(fetch("add.wasm"), importObject).then(
+            (obj) => 
+               {
+                  console.log("The result of the add is: " + obj.instance.exports.add(1, 2)); // "3"                  
+               } // end of successful promise argument
+            ); // end of then
+         
+         </script>
+
+   </head>
+   <body>
+		<p>Open the console to see the result! (f12)</p>
+	</body>>
+</html>
