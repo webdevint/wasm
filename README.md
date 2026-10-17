@@ -14,13 +14,13 @@ The examples include:
 
 - Using the Emscripten compiler and its various outputs;
 
--  Compiling C source code to wasm that includes code to:
+- Compiling C source code to wasm that includes code to:
 
-    - Call Javascript functions from C;
+  - Call Javascript functions from C;
 
-    - Call C functions from Javascript;
+  - Call C functions from Javascript;
 
-    - How to read/write to Linear memory both in Javascript and in C.
+  - How to read/write to Linear memory both in Javascript and in C.
 
 - Working with wasm text language .wat files.
 
@@ -88,8 +88,6 @@ The Javascript code portion,
 
 10. Fetch a block of Linear Memory containing a string created within the C code buffer; decode and log it.
 
-
-
 The C code portion,
 
 1. Includes the Emscipten header in order to use the macro,<br>
@@ -131,12 +129,56 @@ A further demonstration of Javascript interacting with C to manipulate shared da
 
 
 
+<u>The WAT language</u>
 
 
 
+The next examples work with the Web Assembly Text language, "WAT" files.
+
+ The examples were developed using the wabt tools found on github, e.g., wat2wasm and 
+
+wasm2wat, etc. 
+
+Also, for headless testing, the wasmrun tool from anistark  and the wasmtime tool from the Bytecode Alliance folks.
 
 
 
+Examples:
 
+**add.wat**
 
+1. Simple function to add 2 numbers, passed to it from Javascript, and returns the result;
 
+2. introduces the general format for a function including the jeywords function, param, and result;
+
+3. demonstrates: 
+
+   1. the use of user created identifier names;
+
+   2. the built-in add command;
+
+   3. the export function.
+
+**funcAdd.wat**
+
+1. Similar to add.wat but 
+
+   1. codes two functions in order to demonstrate the calling of functions within the wat code;
+
+   2. hard codes the values to be added within the wat code;
+
+2. a function defined within the wat code, when called from javascript, in turn calls another function defined within the wat code to do the summing;
+
+3. embeds the export command within the function signature.
+
+**importJSFunc.wat**
+
+1. imports a function from Javascript;
+
+2. calls the imported function via another function, which itself is called by Javascript
+
+**start.wat**
+
+1. similar to funcAdd.wat bu is self running via the use of the start command.
+
+2. executes the main function upon loading.
