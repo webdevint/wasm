@@ -129,7 +129,7 @@ A further demonstration of Javascript interacting with C to manipulate shared da
 
 
 
-**The WAT language**
+<u>The WAT language</u>
 
 
 
@@ -179,6 +179,14 @@ Examples:
 
 **start.wat**
 
-1. similar to funcAdd.wat bu is self running via the use of the start command.
+1. similar to funcAdd.wat but is self running via the use of the start command.
 
 2. executes the main function upon loading.
+
+**hellov3.wat**
+
+1. converts a binary number to its equivalent decimal value expressed in ascii.
+
+2. Implements a WASI function: fd_write
+
+3. run with wasmtime which provides WASI resources
