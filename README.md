@@ -183,7 +183,7 @@ Examples:
 
 2. executes the main function upon loading.
 
-**hellov3.wat**
+**Bin2Dec_FD_Write.wat**
 
 1. converts a binary number to its equivalent decimal value expressed in ascii.
 
