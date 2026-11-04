@@ -1,10 +1,7 @@
 // dataXchV3.c
-
-
 // emcc dataXchV3.c -o dataXchV3.wasm
 
 #include "emscripten/emscripten.h"
-
 
 #ifdef __cplusplus
 #define EXTERN extern "C"
@@ -15,15 +12,21 @@
 #define SIZE  10
 int data[SIZE];
 
-
-EXTERN EMSCRIPTEN_KEEPALIVE void add(int value) { 
+EXTERN EMSCRIPTEN_KEEPALIVE void add(int value) 
+{ 
   for (int i=0; i<SIZE; i++) {
     data[i] = data[i] + value;
   }
 }
 
-EXTERN EMSCRIPTEN_KEEPALIVE int* getData() {
+EXTERN EMSCRIPTEN_KEEPALIVE int* getData() 
+{
   return &data[0];
+}
+
+EXTERN EMSCRIPTEN_KEEPALIVE int getSize() 
+{
+  return SIZE;
 }
 
 // token main function
