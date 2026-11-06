@@ -82,7 +82,7 @@
         ;;
         ;; main process
         ;;
-        i32.const 15                ;; first arg for bin2dec: binary number to convert
+        i32.const 0x0F                ;; first arg for bin2dec: binary number to convert
         global.get $intbin2decPtr   ;; second arg for bin2dec: result work area
         call $bin2dec
         global.set $intbin2decReturnAddr    ;; save address of start of decimal string
