@@ -104,7 +104,7 @@
         global.get $intbin2decReturnAddr    ;; from address
         local.get $intResLen                ;; length to copy
         memory.copy
-        ;; add a carriage return at end of msg
+        ;; add a line feed at end of msg
         local.get $intResOffset
         local.get $intResLen
         i32.add
@@ -126,7 +126,7 @@
         local.get $intResLen
         global.get $intCharMsgLen
         i32.add
-        i32.const 1                             ;; add 1 for the carriage return control character
+        i32.const 1                             ;; add 1 for the line feed control character
         i32.add
         i32.store
         
