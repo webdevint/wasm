@@ -1,6 +1,6 @@
 # Exploring Web Assembly (WASM) Through Examples
 
-This package consists of several base examples of working with WASM and the various tools, which may be of interest to the curious developer. A more detailed discussion on the examples can be found in the pdf file NotesOnExamples, in the examples folder.
+This package consists of several base examples of working with WASM and the various tools, which may be of interest to the curious developer. A more detailed discussion on the examples can be found in the pdf file *NotesOnExamples*, in the examples folder.
 
 The examples use the Emscripten toolchain to compile C source code to a wasm file suitable to be used by Javascript in a Web page.
 
